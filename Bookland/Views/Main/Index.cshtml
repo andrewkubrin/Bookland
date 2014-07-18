@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Index</h2>
+
+    <script src="~/Scripts/knockout-3.1.0.js"></script>
+    <script src="~/Scripts/jquery-1.10.2-vsdoc.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.validate-vsdoc.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/knockout-3.1.0.js"></script>
+    <script src="~/Scripts/MainModel.js"></script>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/MainModel.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.debug.js"></script>
+    <div style="inline-box-align: initial">
+        <button id="booksButton" onclick="show('book')">Books</button>
+        <button id="shelvesButton" onclick="show('shelv')">Shelves</button>
+        <button id="shelvesButton" onclick="show('bookspace')">BookSpaces</button>
+        <button id="shelvesButton" onclick="show('room')">Rooms</button>
+        <button id="shelvesButton" onclick="show('journal')">Journal</button>
+        <button id="shelvesButton" onclick="show('readers')">Readers</button>
+    </div>
+
+    <div id="readers" style="display: none">
+        <h4>Books</h4>
+        <table style="width:900px">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Family</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: readers">
+                <tr data-bind="attr: { class: 'view'+Id() }">
+                    <td data-bind="text: Name()"></td>
+                    <td data-bind="text: Family"></td>
+                    <td><a href='#' data-bind='click: $parent.removeReader'>Delete</a></td>
+                    <td><a href='#' data-bind='click: function() {$parent.currentReader(this); }'>Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit" data-bind="click: createReader">Create form</button>
+        <form data-bind="with: currentReader">
+            <div id="addBook">
+                <table>
+                    <tr>
+                        <td>Name:</td>
+                        <td><input data-bind='value: Name' /><br /></td>
+                    </tr>
+                    <tr>
+                        <td> Family:</td>
+                        <td><input data-bind='value: Family' /></td>
+                    </tr>
+                </table>
+                <button type="submit" data-bind="click: $parent.saveReader">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="journal" style="display: none">
+        <h4>Journal</h4>
+        <table style="width:900px">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Reader</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: journal">
+                <tr >
+                    <td data-bind="text: $parent.getBookName(BookId())"></td>
+                    <td data-bind="text: $parent.getReaderFullName(ReaderId())"></td>
+                    <td><a href='#' data-bind='click: $parent.removeJournal'>Back it back</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="book" style="display: none">
+        <h4>Books</h4>
+        <table style="width:900px">
+            <thead>
+                <tr>
+                    <th>Book name</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>Pages</th>
+                    <th>Location</th>
+                    <th>Out of library</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: books">
+                <tr >
+                    <td data-bind="text: Name()"></td>
+                    <td data-bind="text: Author"></td>
+                    <td data-bind="text: Year"></td>
+                    <td data-bind="text: Pages"></td>
+                    <td data-bind='html: $parent.shelveName(ShelfId())'></td>
+                    <td data-bind="text: AssignedUser"></td>
+                    <td><a href='#' data-bind='click: $parent.removeBook'>Delete</a></td>
+                    <td><a href='#' data-bind='click: function() {$parent.currentBook(this); $parent.reCompute.notifySubscribers(); $parent.shelve($parent.getShelve(ShelfId()))}'>Edit</a></td>
+                    <td data-bind="visible: $root.isInLibrary(Id())==0">
+                        <select data-bind="options: $parent.readers,
+                       optionsText: 'Name',
+                       value: $root.selectedReader,
+                       optionsCaption: 'Choose...'"></select>
+
+                        <input type="button" value="Assign" data-bind="click: $root.saveLog">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit" data-bind="click: createBook">Create form</button>
+        <form data-bind="with: currentBook">
+            <div id="addBook">
+                <table>
+                    <tr>
+                        <td>
+                            Select shelve for a book:
+                        </td>
+                        <td>
+                            <select data-bind="options: $parent.shelves,
+                       optionsText: 'Name',
+                       value: $root.shelve,
+                       optionsCaption: 'Choose...'"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Name:</td>
+                        <td><input data-bind='value: Name' /><br /></td>
+                    </tr>
+                    <tr>
+                        <td>Year:</td>
+                        <td><select id="year" data-bind="value: Year"></select></td>
+                    </tr>
+                    <tr>
+                        <td> Pages:</td>
+                        <td><select id="pages" data-bind="value: Pages"></select></td>
+                    </tr>
+                    <tr>
+                        <td> Author:</td>
+                        <td><input data-bind='value: Author' /></td>
+                    </tr>
+                </table>
+                <button type="submit" data-bind="click: $parent.saveBook">Submit</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="shelv" style="display: none">
+        <h4>Shelves</h4>
+        <table style="width:400px">
+            <thead>
+                <tr>
+                    <th>Shelve name</th>
+                    <th>Location</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: shelves">
+                <tr data-bind="attr: { class: 'view'+Id() }">
+                    <td data-bind="text: Name()"></td>
+                    <td data-bind='html: $parent.bookSpaceName(BookSpaceId())'></td>
+                    <td><a href='#' data-bind='click: $parent.removeShelv'>Delete</a></td>
+                    <td><a href='#' data-bind='click: function() {$parent.currentShelve(this); $parent.reCompute.notifySubscribers();}'>Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit" data-bind="click: createShelve">Create form</button>
+        <form id="AddShelv" data-bind="with:currentShelve">
+            <table>
+                <tr>
+                    <td>Shelve name:</td>
+                    <td><input data-bind='value: Name' /></td>
+                </tr>
+                <tr>
+                    <td>Room:</td>
+                    <td><select data-bind="options: $parent.rooms, value:$parent.shelveRoom, optionsText: 'Name', event:{ change: $root.fillAvailableBookSpaces}"></select></td>
+                </tr>
+                <tr>
+                    <td>Book space::</td>
+                    <td><select data-bind="options: $parent.availableBookSpaces,value:$parent.shelveSpace, optionsText: 'Number'"></select></td>
+                </tr>
+            </table>
+            <button type="submit" data-bind="click: $parent.saveShelv">Apply Changes</button>
+        </form>
+
+
+    </div>
+
+    <div id="bookspace" style="display: none">
+        <h4>Book spaces</h4>
+        <table style="width:400px">
+            <thead>
+                <tr>
+                    <th>Book space name</th>
+                    <th>Room name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: bookSpaces">
+                <tr data-bind="attr: { class: 'view'+Id() }">
+                    <td data-bind="text: Number()"></td>
+                    <td data-bind='html: $parent.roomName(RoomId())'></td>
+                    <td><a href='#' data-bind='click: $parent.removeBookSpace'>Delete</a></td>
+                    <td><a href='#' data-bind='click: function() {$parent.editMode(this, "bookspace")}'>Edit</a></td>
+                </tr>
+                <tr data-bind="attr: { class: 'edit'+Id() }" style="visibility: hidden">
+                    <td><input data-bind='value: Number' required /></td>
+                    <td>
+                        Room:
+                        <select data-bind="options: $parent.rooms, value:$parent.newBookSpaceRoom,selectedOptions: $root.getRoom(RoomId()),optionsText: 'Name'"></select>
+                    </td>
+                    <td><a href='#' data-bind='click: function() {$parent.viewMode(this, "bookspace")}'>Back</a></td>
+                    <td><a href='#' data-bind='click: $parent.saveBookSpace'>Save</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="AddBookSpace">
+            <table>
+                <tr>
+                    <td>Book space number:</td>
+                    <td><input data-bind='value: newBookSpace' required /></td>
+                </tr>
+                <tr>
+                    <td>Room:</td>
+                    <td><select data-bind="options: rooms,value:newBookSpaceRoom, optionsText: 'Name'"></select></td>
+                </tr>
+            </table>
+            <button type="submit" data-bind="click: saveBookSpace">Add new</button>
+        </div>
+
+    </div>
+
+    <div id="room" style="display: none">
+        <h4>Rooms</h4>
+        <table style="width:200px">
+            <thead>
+                <tr>
+                    <th>Room name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: rooms">
+                <tr data-bind="attr: { class: 'view'+Id() }">
+                    <td data-bind="text: Name()"></td>
+                    <td><a href='#' data-bind='click: $parent.removeRoom'>Delete</a></td>
+                    <td><a href='#' data-bind='click: function() {$parent.editMode(this, "room")}'>Edit</a></td>
+                </tr>
+                <tr data-bind="attr: { class: 'edit'+Id() }" style="visibility: hidden">
+                    <td><input data-bind='value: Name' required></td>
+                    <td><a href='#' data-bind='click: function() {$parent.viewMode(this, "room")}'>Back</a></td>
+                    <td><a href='#' data-bind='click: $parent.saveRoom'>Save</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <form data-bind="submit: saveRoom">
+            <div id="AddRoom">
+                Room name:
+                <input type="text" name="newRoomName" data-bind='value: newRoomName' required>
+                <button type="submit">Add new</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AppBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Author" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="ShelfId" Type="Int32" Nullable="false" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <Property Name="Pages" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BookSpace">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Number" Type="Int32" Nullable="false" />
+    <Property Name="RoomId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Log">
+    <Key>
+      <PropertyRef Name="BookId" />
+      <PropertyRef Name="ReaderId" />
+      <PropertyRef Name="Date" />
+    </Key>
+    <Property Name="BookId" Type="Int32" Nullable="false" />
+    <Property Name="ReaderId" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Reader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Family" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Room">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Shelf">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="BookSpaceId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Book_Shelf">
+    <End Role="Shelf" Type="Self.Shelf" Multiplicity="1" />
+    <End Role="Book" Type="Self.Book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Shelf">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Book">
+        <PropertyRef Name="ShelfId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Log_Book">
+    <End Role="Book" Type="Self.Book" Multiplicity="1" />
+    <End Role="Log" Type="Self.Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Book">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Log">
+        <PropertyRef Name="BookId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BookSpace_Room">
+    <End Role="Room" Type="Self.Room" Multiplicity="1" />
+    <End Role="BookSpace" Type="Self.BookSpace" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Room">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookSpace">
+        <PropertyRef Name="RoomId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Shelf_BookSpace">
+    <End Role="BookSpace" Type="Self.BookSpace" Multiplicity="1" />
+    <End Role="Shelf" Type="Self.Shelf" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookSpace">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Shelf">
+        <PropertyRef Name="BookSpaceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Log_Reader">
+    <End Role="Reader" Type="Self.Reader" Multiplicity="1" />
+    <End Role="Log" Type="Self.Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reader">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Log">
+        <PropertyRef Name="ReaderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AppEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Books" EntityType="Self.Book" />
+    <EntitySet Name="BookSpaces" EntityType="Self.BookSpace" />
+    <EntitySet Name="Logs" EntityType="Self.Log" />
+    <EntitySet Name="Readers" EntityType="Self.Reader" />
+    <EntitySet Name="Rooms" EntityType="Self.Room" />
+    <EntitySet Name="Shelves" EntityType="Self.Shelf" />
+    <AssociationSet Name="FK_Book_Shelf" Association="Self.FK_Book_Shelf">
+      <End Role="Shelf" EntitySet="Shelves" />
+      <End Role="Book" EntitySet="Books" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Log_Book" Association="Self.FK_Log_Book">
+      <End Role="Book" EntitySet="Books" />
+      <End Role="Log" EntitySet="Logs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BookSpace_Room" Association="Self.FK_BookSpace_Room">
+      <End Role="Room" EntitySet="Rooms" />
+      <End Role="BookSpace" EntitySet="BookSpaces" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Shelf_BookSpace" Association="Self.FK_Shelf_BookSpace">
+      <End Role="BookSpace" EntitySet="BookSpaces" />
+      <End Role="Shelf" EntitySet="Shelves" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Log_Reader" Association="Self.FK_Log_Reader">
+      <End Role="Reader" EntitySet="Readers" />
+      <End Role="Log" EntitySet="Logs" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

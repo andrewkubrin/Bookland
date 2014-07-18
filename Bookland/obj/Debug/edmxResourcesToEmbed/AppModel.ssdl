@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AppBaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="Author" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="ShelfId" Type="int" Nullable="false" />
+    <Property Name="Year" Type="int" Nullable="false" />
+    <Property Name="Pages" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BookSpace">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Number" Type="int" Nullable="false" />
+    <Property Name="RoomId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Log">
+    <Key>
+      <PropertyRef Name="BookId" />
+      <PropertyRef Name="ReaderId" />
+      <PropertyRef Name="Date" />
+    </Key>
+    <Property Name="BookId" Type="int" Nullable="false" />
+    <Property Name="ReaderId" Type="int" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Reader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Family" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Room">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Shelf">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="BookSpaceId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Book_Shelf">
+    <End Role="Shelf" Type="Self.Shelf" Multiplicity="1" />
+    <End Role="Book" Type="Self.Book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Shelf">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Book">
+        <PropertyRef Name="ShelfId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BookSpace_Room">
+    <End Role="Room" Type="Self.Room" Multiplicity="1" />
+    <End Role="BookSpace" Type="Self.BookSpace" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Room">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BookSpace">
+        <PropertyRef Name="RoomId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Log_Book">
+    <End Role="Book" Type="Self.Book" Multiplicity="1" />
+    <End Role="Log" Type="Self.Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Book">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Log">
+        <PropertyRef Name="BookId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Log_Reader">
+    <End Role="Reader" Type="Self.Reader" Multiplicity="1" />
+    <End Role="Log" Type="Self.Log" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reader">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Log">
+        <PropertyRef Name="ReaderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Shelf_BookSpace">
+    <End Role="BookSpace" Type="Self.BookSpace" Multiplicity="1" />
+    <End Role="Shelf" Type="Self.Shelf" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BookSpace">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Shelf">
+        <PropertyRef Name="BookSpaceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AppBaseModelStoreContainer">
+    <EntitySet Name="Book" EntityType="Self.Book" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BookSpace" EntityType="Self.BookSpace" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Reader" EntityType="Self.Reader" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Room" EntityType="Self.Room" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Shelf" EntityType="Self.Shelf" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Book_Shelf" Association="Self.FK_Book_Shelf">
+      <End Role="Shelf" EntitySet="Shelf" />
+      <End Role="Book" EntitySet="Book" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BookSpace_Room" Association="Self.FK_BookSpace_Room">
+      <End Role="Room" EntitySet="Room" />
+      <End Role="BookSpace" EntitySet="BookSpace" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Log_Book" Association="Self.FK_Log_Book">
+      <End Role="Book" EntitySet="Book" />
+      <End Role="Log" EntitySet="Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Log_Reader" Association="Self.FK_Log_Reader">
+      <End Role="Reader" EntitySet="Reader" />
+      <End Role="Log" EntitySet="Log" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Shelf_BookSpace" Association="Self.FK_Shelf_BookSpace">
+      <End Role="BookSpace" EntitySet="BookSpace" />
+      <End Role="Shelf" EntitySet="Shelf" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AppBaseModelStoreContainer" CdmEntityContainer="AppEntities">
+    <EntitySetMapping Name="Books">
+      <EntityTypeMapping TypeName="AppBaseModel.Book">
+        <MappingFragment StoreEntitySet="Book">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Author" ColumnName="Author" />
+          <ScalarProperty Name="ShelfId" ColumnName="ShelfId" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="Pages" ColumnName="Pages" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BookSpaces">
+      <EntityTypeMapping TypeName="AppBaseModel.BookSpace">
+        <MappingFragment StoreEntitySet="BookSpace">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="AppBaseModel.Log">
+        <MappingFragment StoreEntitySet="Log">
+          <ScalarProperty Name="BookId" ColumnName="BookId" />
+          <ScalarProperty Name="ReaderId" ColumnName="ReaderId" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Readers">
+      <EntityTypeMapping TypeName="AppBaseModel.Reader">
+        <MappingFragment StoreEntitySet="Reader">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Family" ColumnName="Family" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Rooms">
+      <EntityTypeMapping TypeName="AppBaseModel.Room">
+        <MappingFragment StoreEntitySet="Room">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Shelves">
+      <EntityTypeMapping TypeName="AppBaseModel.Shelf">
+        <MappingFragment StoreEntitySet="Shelf">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BookSpaceId" ColumnName="BookSpaceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
